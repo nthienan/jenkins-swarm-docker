@@ -1,0 +1,27 @@
+sudo: required
+language: python3.6
+services:
+  - docker
+env:
+  global:
+    - IMAGE=nthienan/jenkins-swarm
+  matrix:
+    - VARIANT=centos7.6.1810 VERSION=3.15 SHA512=54eb41ef015208225f241b4ac447bc9cb8db9de6991c514cb7843e07f7850378340aef9de397e3552b0393acb03035569fa758dc0a227535e80cb4c0867be301
+    - VARIANT=centos7.6.1810 VERSION=3.14 SHA512=5469e33319cc0e5cd482496a001c0f9a109099bf89a581a5b73c5c6f5bd12fd0e1902625f4d146b94f35332c8ce9e61339993bfac06f60c39677eb26c6a41273
+install: true
+
+script:
+  - ./builder.sh build $IMAGE $VARIANT $VERSION
+after_success:
+  - docker images
+
+before_deploy:
+  - pip install --user -r requirements.txt
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+deploy:
+  - provider: script
+    script: ./builder.sh deploy $IMAGE $VARIANT $VERSION
+    on:
+      branch: master
+after_deploy:
+  - docker images
