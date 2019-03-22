@@ -16,5 +16,5 @@ if [ "$MODE" = 'build' ]; then
 fi
 if [ "$MODE" = "deploy" ]; then
     echo -e '\nDeploying...'
-    dcd --version $VERSION --version-semver --tag $tag --verbose $IMAGE:$VERSION-$tag
+    docker push $IMAGE:$VERSION-$tag
 fi
