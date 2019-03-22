@@ -11,7 +11,7 @@ env:
 install: true
 
 script:
-  - ./builder.sh build $IMAGE $VARIANT $VERSION
+  - ./builder.sh build $IMAGE $VARIANT $VERSION $SHA512
 after_success:
   - docker images
 
